@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    @apply min-h-screen bg-paper bg-hero font-sans text-ink antialiased;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  * {
+    scrollbar-color: #b8c4d4 transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-slate-200/80 bg-panel shadow-panel;
+  }
+
+  .field-label {
+    @apply mb-2 block text-sm font-semibold text-slate-700;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cobalt-500 focus:ring-4 focus:ring-cobalt-100 disabled:bg-slate-100 disabled:text-slate-500;
+  }
+
+  .field-error {
+    @apply mt-2 text-sm text-danger;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-white hover:bg-slate-800 focus:ring-slate-200;
+  }
+
+  .btn-secondary {
+    @apply btn border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 focus:ring-slate-200;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger text-white hover:bg-orange-700 focus:ring-orange-100;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900;
+  }
+
+  .nav-link-active {
+    @apply bg-slate-900 text-white hover:bg-slate-800 hover:text-white;
+  }
+}
