@@ -1,4 +1,5 @@
 import { config } from '../config';
+import { readCookie } from '../auth/csrf';
 import { clearStoredSession, dispatchUnauthorizedEvent } from '../auth/session';
 import { ApiError, type ApiErrorPayload } from './types';
 
@@ -8,13 +9,23 @@ type RequestOptions = RequestInit & {
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers = new Headers(options.headers);
+  const method = (options.method || 'GET').toUpperCase();
 
   if (options.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
 
+  const unsafeMethod = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+  if (unsafeMethod && !headers.has(config.csrfHeaderName)) {
+    const csrfToken = readCookie(config.csrfCookieName);
+    if (csrfToken) {
+      headers.set(config.csrfHeaderName, csrfToken);
+    }
+  }
+
   const response = await fetch(`${config.apiBaseUrl}${path}`, {
     ...options,
+    method,
     headers,
     credentials: 'include',
   });
