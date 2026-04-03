@@ -31,5 +31,6 @@ export function RoleBadge({ role }: { role: UserRole }) {
 export function StatusBadge({ status }: { status: UserStatus }) {
   const tone =
     status === 'active' ? 'success' : status === 'pending_verification' ? 'warning' : 'danger';
-  return <Badge tone={tone}>{status.replace('_', ' ')}</Badge>;
+  const label = status === 'pending_verification' ? 'pending' : status;
+  return <Badge tone={tone}>{label}</Badge>;
 }

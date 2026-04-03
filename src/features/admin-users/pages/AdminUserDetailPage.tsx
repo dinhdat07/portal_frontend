@@ -45,6 +45,7 @@ export function AdminUserDetailPage() {
       queryClient.setQueryData(queryKeys.adminUser(userId), data);
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       setDialog(null);
+      navigate('/admin/users');
     },
   });
 

@@ -20,6 +20,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function ForgotPasswordPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [requestedEmail, setRequestedEmail] = useState('');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -30,9 +31,10 @@ export function ForgotPasswordPage() {
 
   const mutation = useMutation({
     mutationFn: forgotPassword,
-    onSuccess: (response) => {
+    onSuccess: (response, values) => {
       setSuccessMessage(response.message);
-      form.reset();
+      setRequestedEmail(values.email);
+      form.setValue('email', values.email);
     },
   });
 
@@ -52,7 +54,7 @@ export function ForgotPasswordPage() {
         className="space-y-5 px-6 py-6 sm:px-8"
         onSubmit={form.handleSubmit((values) => {
           setSuccessMessage(null);
-          mutation.mutate(values);
+          mutation.mutate(requestedEmail ? { email: requestedEmail } : values);
         })}
       >
         {mutation.isError ? (
@@ -60,12 +62,20 @@ export function ForgotPasswordPage() {
         ) : null}
         {successMessage ? <Alert tone="success" description={successMessage} /> : null}
 
-        <Field label="Email" error={form.formState.errors.email?.message}>
-          <Input type="email" placeholder="ada@example.com" {...form.register('email')} />
-        </Field>
+        {!requestedEmail ? (
+          <Field label="Email" error={form.formState.errors.email?.message}>
+            <Input type="email" placeholder="ada@example.com" {...form.register('email')} />
+          </Field>
+        ) : null}
+
+        {requestedEmail ? (
+          <p className="text-sm text-slate-600">
+            Reset link will be sent to <span className="font-semibold text-slate-900">{requestedEmail}</span>.
+          </p>
+        ) : null}
 
         <Button type="submit" className="w-full" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Sending...' : 'Send reset email'}
+          {mutation.isPending ? 'Sending...' : requestedEmail ? 'Resend reset email' : 'Send reset email'}
         </Button>
 
         <p className="text-center text-sm text-slate-600">

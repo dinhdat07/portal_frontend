@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 import { Alert } from '../../../components/ui/Alert';
 import { Button } from '../../../components/ui/Button';
@@ -26,9 +26,9 @@ const schema = z
 type FormValues = z.infer<typeof schema>;
 
 export function ResetPasswordPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tokenFromQuery = searchParams.get('token') || '';
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -49,13 +49,8 @@ export function ResetPasswordPage() {
         password: values.password,
         confirm_password: values.confirmPassword,
       }),
-    onSuccess: (response) => {
-      setSuccessMessage(response.message);
-      form.reset({
-        token: tokenFromQuery,
-        password: '',
-        confirmPassword: '',
-      });
+    onSuccess: () => {
+      navigate('/login', { replace: true });
     },
   });
 
@@ -73,19 +68,13 @@ export function ResetPasswordPage() {
 
       <form
         className="space-y-5 px-6 py-6 sm:px-8"
-        onSubmit={form.handleSubmit((values) => {
-          setSuccessMessage(null);
-          mutation.mutate(values);
-        })}
+        onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
       >
         {mutation.isError ? (
           <Alert tone="danger" description={getErrorMessage(mutation.error, 'Unable to reset password')} />
         ) : null}
-        {successMessage ? <Alert tone="success" description={successMessage} /> : null}
 
-        <Field label="Token" error={form.formState.errors.token?.message}>
-          <Input placeholder="Paste your token" {...form.register('token')} />
-        </Field>
+        <input type="hidden" {...form.register('token')} />
 
         <Field label="New password" error={form.formState.errors.password?.message}>
           <Input type="password" {...form.register('password')} />
@@ -99,12 +88,6 @@ export function ResetPasswordPage() {
           {mutation.isPending ? 'Saving...' : 'Reset password'}
         </Button>
 
-        <p className="text-center text-sm text-slate-600">
-          Need a new email?{' '}
-          <Link className="font-semibold text-cobalt-600 hover:text-cobalt-500" to="/forgot-password">
-            Request another reset link
-          </Link>
-        </p>
       </form>
     </Card>
   );

@@ -48,7 +48,7 @@ export function AdminUsersFilters({ initialValues, onSubmit, onReset }: AdminUse
             <select className="field-input" {...form.register('status')}>
               <option value="">All statuses</option>
               <option value="active">active</option>
-              <option value="pending_verification">pending_verification</option>
+              <option value="pending_verification">pending</option>
               <option value="deleted">deleted</option>
             </select>
           </Field>
