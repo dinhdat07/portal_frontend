@@ -58,7 +58,7 @@ export function AdminUsersPage() {
       <PageHeader
         eyebrow="Admin"
         title="User operations"
-        description="Search, inspect, onboard, update roles, and manage restore/delete lifecycle against the live backend routes."
+        description="Search users, review accounts, and manage access."
         actions={
           config.featureFlags.enableAdminCreateUser ? (
             <Link to="/admin/users/new">
@@ -92,7 +92,7 @@ export function AdminUsersPage() {
       {query.data ? (
         <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
           <p>
-            Page {query.data.meta.page} of {totalPages} · {query.data.meta.total} total users
+            Page {query.data.meta.page} of {totalPages} - {query.data.meta.total} total users
           </p>
           <div className="flex gap-3">
             <Button
@@ -123,3 +123,4 @@ export function AdminUsersPage() {
     </div>
   );
 }
+

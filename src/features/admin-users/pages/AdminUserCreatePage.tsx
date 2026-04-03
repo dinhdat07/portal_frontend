@@ -13,13 +13,19 @@ import { Input } from '../../../components/ui/Input';
 import { PageHeader } from '../../../components/ui/PageHeader';
 import { createAdminUser } from '../../../lib/api/admin-users';
 import { getErrorMessage } from '../../../lib/api/errors';
+import { getTodayDateInputValue } from '../../../lib/date';
+
+const today = getTodayDateInputValue();
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
   username: z.string().min(3, 'Minimum 3 characters').max(50, 'Maximum 50 characters'),
   firstName: z.string().min(1, 'First name is required').max(100, 'Maximum 100 characters'),
   lastName: z.string().min(1, 'Last name is required').max(100, 'Maximum 100 characters'),
-  dob: z.string().min(1, 'Date of birth is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .refine((value) => value <= today, 'Date of birth cannot be in the future'),
   role: z.enum(['user', 'admin']),
 });
 
@@ -64,7 +70,7 @@ export function AdminUserCreatePage() {
       <PageHeader
         eyebrow="Admin"
         title="Create user"
-        description="Create a pending user and send a set-password email so they can finish account setup."
+        description="Create a new user account and choose their role."
         actions={
           <Link to="/admin/users">
             <Button variant="secondary">Cancel</Button>
@@ -76,7 +82,7 @@ export function AdminUserCreatePage() {
         <div className="mb-5">
           <Alert
             tone="info"
-            description="The backend will send a set-password email after creation. The new user remains pending until they complete the setup flow."
+            description="After creation, the user will receive an email to complete account setup."
           />
         </div>
         <form className="space-y-5" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
@@ -102,7 +108,7 @@ export function AdminUserCreatePage() {
               <Input {...form.register('username')} />
             </Field>
             <Field label="Date of birth" error={form.formState.errors.dob?.message}>
-              <Input type="date" {...form.register('dob')} />
+              <Input type="date" max={today} {...form.register('dob')} />
             </Field>
           </div>
 

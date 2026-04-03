@@ -51,7 +51,7 @@ export function LoginPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Authentication</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Sign in to the portal</h2>
-        <p className="mt-2 text-sm text-slate-600">Access your account and, if authorized, the admin user-management workspace.</p>
+        <p className="mt-2 text-sm text-slate-600">Welcome back. Sign in to continue to your account.</p>
       </div>
 
       <form
@@ -74,12 +74,9 @@ export function LoginPage() {
           {mutation.isPending ? 'Signing in...' : 'Sign in'}
         </Button>
 
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-start text-sm">
           <Link className="font-semibold text-cobalt-600 hover:text-cobalt-500" to="/forgot-password">
             Forgot password?
-          </Link>
-          <Link className="font-semibold text-cobalt-600 hover:text-cobalt-500" to="/resend-verification">
-            Resend verification
           </Link>
         </div>
 

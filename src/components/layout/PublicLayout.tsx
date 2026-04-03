@@ -11,21 +11,21 @@ export function PublicLayout() {
             </span>
             <div className="space-y-4">
               <h1 className="max-w-lg font-display text-5xl font-semibold tracking-tight">
-                Modern operations for identity, profile, and admin workflows.
+                Manage your account and team access in one place.
               </h1>
               <p className="max-w-xl text-base text-white/70">
-                This frontend tracks the backend contract directly, prioritizing reliable API behavior over optimistic feature exposure.
+                Sign in, update your profile, and manage users with a clean and simple workflow.
               </p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold">Operationally honest</p>
-              <p className="mt-2 text-sm text-white/70">Unsupported backend features stay hidden until the contract exists.</p>
+              <p className="text-sm font-semibold">Simple account tools</p>
+              <p className="mt-2 text-sm text-white/70">Create your account, verify email, and keep your profile up to date.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <p className="text-sm font-semibold">Built for admins</p>
-              <p className="mt-2 text-sm text-white/70">Filter, inspect, restore, and manage user access with role-aware controls.</p>
+              <p className="mt-2 text-sm text-white/70">Search users, review details, and manage access safely.</p>
             </div>
           </div>
         </section>

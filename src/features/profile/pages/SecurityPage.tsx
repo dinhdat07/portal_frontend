@@ -59,7 +59,7 @@ export function SecurityPage() {
       <PageHeader
         eyebrow="Account"
         title="Security settings"
-        description="Change your password against the current backend contract."
+        description="Change your password to keep your account secure."
       />
 
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
@@ -93,11 +93,11 @@ export function SecurityPage() {
         </Card>
 
         <Card className="p-6">
-          <h2 className="font-display text-xl font-semibold text-slate-950">Security notes</h2>
+          <h2 className="font-display text-xl font-semibold text-slate-950">Password tips</h2>
           <ul className="mt-4 space-y-3 text-sm text-slate-600">
-            <li>Backend validation requires a minimum password length of 8 characters.</li>
-            <li>The current password must be correct, otherwise the API returns a conflict error.</li>
-            <li>Session refresh is not supported, so expired tokens redirect back to login.</li>
+            <li>Use at least 8 characters.</li>
+            <li>Combine upper/lowercase letters, numbers, and symbols.</li>
+            <li>Avoid reusing passwords from other apps.</li>
           </ul>
         </Card>
       </div>

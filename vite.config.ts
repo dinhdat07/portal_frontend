@@ -7,13 +7,13 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      port: 5173,
-      proxy: {
-        '/api': {
-          target: env.VITE_DEV_PROXY_TARGET || 'http://localhost:8000',
-          changeOrigin: true,
-        },
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://host.docker.internal:8000',
+        changeOrigin: true,
       },
+    },
     },
     test: {
       environment: 'jsdom',

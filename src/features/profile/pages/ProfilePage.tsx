@@ -96,13 +96,13 @@ export function ProfilePage() {
 
         <Card className="flex flex-col gap-4 p-6">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Backend notes</p>
-            <h3 className="mt-2 font-display text-xl font-semibold text-slate-950">Current contract guardrails</h3>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Quick actions</p>
+            <h3 className="mt-2 font-display text-xl font-semibold text-slate-950">Keep your account secure</h3>
           </div>
           <ul className="space-y-3 text-sm text-slate-600">
-            <li>The backend expects JWT bearer auth on all protected requests.</li>
-            <li>No refresh token or logout API exists, so sign-out is client-side only.</li>
-            <li>Profile edits now send complete payloads, including date of birth, to the backend.</li>
+            <li>Update your profile whenever your personal details change.</li>
+            <li>Change your password regularly to keep your account protected.</li>
+            <li>Check last login activity if you suspect unusual access.</li>
           </ul>
           <Link to="/account/security" className="mt-auto">
             <Button className="w-full">Go to security settings</Button>

@@ -15,14 +15,19 @@ import { PageHeader } from '../../../components/ui/PageHeader';
 import { queryKeys } from '../../../lib/api/keys';
 import { getErrorMessage } from '../../../lib/api/errors';
 import { getMyProfile, updateMyProfile } from '../../../lib/api/users';
-import { toDateInputValue } from '../../../lib/date';
+import { getTodayDateInputValue, toDateInputValue } from '../../../lib/date';
 import { useAuthStore } from '../../../lib/auth/store';
+
+const today = getTodayDateInputValue();
 
 const schema = z.object({
   username: z.string().min(3, 'Minimum 3 characters').max(50, 'Maximum 50 characters'),
   firstName: z.string().min(1, 'First name is required').max(100, 'Maximum 100 characters'),
   lastName: z.string().min(1, 'Last name is required').max(100, 'Maximum 100 characters'),
-  dob: z.string().min(1, 'Date of birth is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .refine((value) => value <= today, 'Date of birth cannot be in the future'),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -89,7 +94,7 @@ export function ProfileEditPage() {
       <PageHeader
         eyebrow="Account"
         title="Edit profile"
-        description="Update your profile against the repaired `PUT /users/me` backend contract."
+        description="Update your personal details."
         actions={
           <Link to="/account/profile">
             <Button variant="secondary">Cancel</Button>
@@ -117,7 +122,7 @@ export function ProfileEditPage() {
               <Input {...form.register('username')} />
             </Field>
             <Field label="Date of birth" error={form.formState.errors.dob?.message}>
-              <Input type="date" {...form.register('dob')} />
+              <Input type="date" max={today} {...form.register('dob')} />
             </Field>
           </div>
 

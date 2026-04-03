@@ -9,7 +9,7 @@ export default defineConfig(function (_a) {
             port: 5173,
             proxy: {
                 '/api': {
-                    target: env.VITE_DEV_PROXY_TARGET || 'http://localhost:8000',
+                    target: 'http://host.docker.internal:8000',
                     changeOrigin: true,
                 },
             },

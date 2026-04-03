@@ -30,7 +30,7 @@ export function VerifyEmailPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Email verification</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Verify your account</h2>
-        <p className="mt-2 text-sm text-slate-600">This page posts the token from your email to the backend verification endpoint.</p>
+        <p className="mt-2 text-sm text-slate-600">We are confirming your email so you can start using your account.</p>
       </div>
 
       <div className="space-y-5 px-6 py-6 sm:px-8">
@@ -54,11 +54,13 @@ export function VerifyEmailPage() {
           <Link to="/login" className="sm:flex-1">
             <Button className="w-full">Go to sign in</Button>
           </Link>
-          <Link to="/resend-verification" className="sm:flex-1">
-            <Button variant="secondary" className="w-full">
-              Resend verification
-            </Button>
-          </Link>
+          {!mutation.isSuccess ? (
+            <Link to="/resend-verification" className="sm:flex-1">
+              <Button variant="secondary" className="w-full">
+                Resend verification
+              </Button>
+            </Link>
+          ) : null}
         </div>
       </div>
     </Card>

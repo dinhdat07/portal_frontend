@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { RoleBadge, StatusBadge } from '../../../components/ui/Badge';
+import { useAuthStore } from '../../../lib/auth/store';
 import { formatDateTime } from '../../../lib/date';
 import type { UserSummary } from '../../../lib/auth/types';
 
@@ -10,6 +11,8 @@ interface AdminUsersTableProps {
 }
 
 export function AdminUsersTable({ users }: AdminUsersTableProps) {
+  const currentUserId = useAuthStore((state) => state.session?.user.id);
+
   if (users.length === 0) {
     return (
       <EmptyState
@@ -44,9 +47,13 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
                 <td className="px-6 py-4"><StatusBadge status={user.status} /></td>
                 <td className="px-6 py-4 text-sm text-slate-600">{formatDateTime(user.updatedAt)}</td>
                 <td className="px-6 py-4">
-                  <Link className="text-sm font-semibold text-cobalt-600 hover:text-cobalt-500" to={`/admin/users/${user.id}`}>
-                    View details
-                  </Link>
+                  {user.role === 'admin' && user.id === currentUserId ? (
+                    <span className="text-sm font-semibold text-slate-400">Current admin</span>
+                  ) : (
+                    <Link className="text-sm font-semibold text-cobalt-600 hover:text-cobalt-500" to={`/admin/users/${user.id}`}>
+                      View details
+                    </Link>
+                  )}
                 </td>
               </tr>
             ))}
@@ -66,9 +73,13 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
             </div>
             <div className="mt-4 flex items-center justify-between">
               <StatusBadge status={user.status} />
-              <Link className="text-sm font-semibold text-cobalt-600 hover:text-cobalt-500" to={`/admin/users/${user.id}`}>
-                Open
-              </Link>
+              {user.role === 'admin' && user.id === currentUserId ? (
+                <span className="text-sm font-semibold text-slate-400">Current admin</span>
+              ) : (
+                <Link className="text-sm font-semibold text-cobalt-600 hover:text-cobalt-500" to={`/admin/users/${user.id}`}>
+                  Open
+                </Link>
+              )}
             </div>
           </div>
         ))}

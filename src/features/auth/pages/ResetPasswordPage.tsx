@@ -68,7 +68,7 @@ export function ResetPasswordPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Password reset</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Reset your password</h2>
-        <p className="mt-2 text-sm text-slate-600">This screen uses the backend `POST /auth/reset-password` endpoint.</p>
+        <p className="mt-2 text-sm text-slate-600">Choose a new password to secure your account.</p>
       </div>
 
       <form

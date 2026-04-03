@@ -44,7 +44,7 @@ export function ResendVerificationPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Verification</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Resend verification email</h2>
-        <p className="mt-2 text-sm text-slate-600">Use the backend resend-verification endpoint if your original email did not arrive.</p>
+        <p className="mt-2 text-sm text-slate-600">Did not get the first email? Enter your address and we will send it again.</p>
       </div>
 
       <form

@@ -11,12 +11,12 @@ export function FeatureUnavailablePage({
 }) {
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow="Backend Guardrail" title={title} description={description} />
+      <PageHeader eyebrow="Unavailable" title={title} description={description} />
       <Card className="p-6">
         <Alert
           tone="warning"
-          title="Intentionally disabled"
-          description="This frontend keeps unsupported backend behavior out of the UI instead of exposing unreliable forms."
+          title="Not available right now"
+          description="This section is temporarily unavailable. Please use the other available pages for now."
         />
       </Card>
     </div>

@@ -13,6 +13,7 @@ import { queryClient } from '../../../app/query-client';
 import { deleteAdminUser, getAdminUser, restoreAdminUser, updateAdminUserRole } from '../../../lib/api/admin-users';
 import { getErrorMessage } from '../../../lib/api/errors';
 import { queryKeys } from '../../../lib/api/keys';
+import { useAuthStore } from '../../../lib/auth/store';
 import { config } from '../../../lib/config';
 import { formatDate, formatDateTime } from '../../../lib/date';
 import type { UserRole } from '../../../lib/auth/types';
@@ -20,6 +21,7 @@ import type { UserRole } from '../../../lib/auth/types';
 export function AdminUserDetailPage() {
   const { userId = '' } = useParams();
   const navigate = useNavigate();
+  const currentUserId = useAuthStore((state) => state.session?.user.id);
   const [role, setRole] = useState<UserRole>('user');
   const [dialog, setDialog] = useState<'delete' | 'restore' | null>(null);
 
@@ -87,13 +89,14 @@ export function AdminUserDetailPage() {
     return null;
   }
   const roleChanged = role !== user.role;
+  const isOtherAdmin = user.role === 'admin' && user.id !== currentUserId;
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Admin"
         title={`${user.firstName} ${user.lastName}`}
-        description="Inspect the current user record, adjust role assignments, and manage delete/restore lifecycle."
+        description="Review this account, update access, and manage account status."
         actions={
           <Link to="/admin/users">
             <Button variant="secondary">Back to users</Button>
@@ -127,8 +130,14 @@ export function AdminUserDetailPage() {
           <Card className="p-6">
             <div className="mb-5">
               <h3 className="font-display text-xl font-semibold text-slate-950">Access controls</h3>
-              <p className="mt-1 text-sm text-slate-600">Role assignment is backed by the live `PUT /admin/users/:userId/role` route.</p>
+              <p className="mt-1 text-sm text-slate-600">Choose the role this user should have in the workspace.</p>
             </div>
+
+            {isOtherAdmin ? (
+              <div className="mb-4">
+                <Alert tone="warning" description="Other admin accounts are read-only. You cannot change this admin from here." />
+              </div>
+            ) : null}
 
             {roleMutation.isError ? (
               <Alert tone="danger" description={getErrorMessage(roleMutation.error, 'Unable to update role')} />
@@ -137,12 +146,17 @@ export function AdminUserDetailPage() {
             <div className="flex flex-col gap-4 md:flex-row md:items-end">
               <label className="block flex-1">
                 <span className="field-label">Role</span>
-                <select className="field-input" value={role} onChange={(event) => setRole(event.target.value as UserRole)}>
+                <select
+                  className="field-input"
+                  value={role}
+                  disabled={isOtherAdmin || roleMutation.isPending}
+                  onChange={(event) => setRole(event.target.value as UserRole)}
+                >
                   <option value="user">user</option>
                   <option value="admin">admin</option>
                 </select>
               </label>
-              <Button disabled={!roleChanged || roleMutation.isPending} onClick={() => roleMutation.mutate(role)}>
+              <Button disabled={isOtherAdmin || !roleChanged || roleMutation.isPending} onClick={() => roleMutation.mutate(role)}>
                 {roleMutation.isPending ? 'Saving...' : 'Save role'}
               </Button>
             </div>
@@ -153,7 +167,7 @@ export function AdminUserDetailPage() {
           <Card className="p-6">
             <h3 className="font-display text-xl font-semibold text-slate-950">Lifecycle actions</h3>
             <p className="mt-2 text-sm text-slate-600">
-              Delete and restore operations are available, and newly created pending users complete onboarding through the set-password email flow.
+              Deactivate an account when needed, or restore it later.
             </p>
 
             {(deleteMutation.isError || restoreMutation.isError) ? (
@@ -167,31 +181,37 @@ export function AdminUserDetailPage() {
 
             <div className="mt-6 space-y-3">
               {user.status === 'deleted' ? (
-                <Button className="w-full" disabled={destructiveBusy} onClick={() => setDialog('restore')}>
+                <Button className="w-full" disabled={isOtherAdmin || destructiveBusy} onClick={() => setDialog('restore')}>
                   Restore user
                 </Button>
               ) : (
-                <Button variant="danger" className="w-full" disabled={destructiveBusy} onClick={() => setDialog('delete')}>
+                <Button variant="danger" className="w-full" disabled={isOtherAdmin || destructiveBusy} onClick={() => setDialog('delete')}>
                   Delete user
                 </Button>
               )}
               {config.featureFlags.enableAdminUserEdit ? (
-                <Link to={`/admin/users/${user.id}/edit`} className="block">
-                  <Button variant="secondary" className="w-full">
+                isOtherAdmin ? (
+                  <Button variant="secondary" className="w-full" disabled>
                     Edit user
                   </Button>
-                </Link>
+                ) : (
+                  <Link to={`/admin/users/${user.id}/edit`} className="block">
+                    <Button variant="secondary" className="w-full">
+                      Edit user
+                    </Button>
+                  </Link>
+                )
               ) : null}
             </div>
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-display text-xl font-semibold text-slate-950">Contract notes</h3>
+            <h3 className="font-display text-xl font-semibold text-slate-950">Admin notes</h3>
             <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li>User detail responses now include date-of-birth and deletion metadata when present.</li>
-              <li>Admin-created users stay in `pending_verification` until they complete the set-password flow from email.</li>
-              <li>Delete is a real `DELETE` route, not `PUT` as documented in the spec.</li>
-              <li>Create and edit flows are available through the repaired backend handlers.</li>
+              <li>Use role changes carefully because they affect access immediately.</li>
+              <li>Newly created accounts may stay pending until setup is completed.</li>
+              <li>Deleted users can be restored from this page at any time.</li>
+              <li>Other admin accounts are read-only for safety.</li>
             </ul>
           </Card>
         </div>
@@ -200,7 +220,7 @@ export function AdminUserDetailPage() {
       <ConfirmDialog
         open={dialog === 'delete'}
         title="Delete this user?"
-        description="This triggers the backend soft-delete route and marks the user as deleted."
+        description="This user will lose access, but you can restore the account later."
         confirmLabel="Delete user"
         busy={deleteMutation.isPending}
         onCancel={() => setDialog(null)}
@@ -210,7 +230,7 @@ export function AdminUserDetailPage() {
       <ConfirmDialog
         open={dialog === 'restore'}
         title="Restore this user?"
-        description="This triggers the backend restore route and returns the user to active status."
+        description="This user will regain access and return to active status."
         confirmLabel="Restore user"
         tone="primary"
         busy={restoreMutation.isPending}

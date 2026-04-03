@@ -45,7 +45,7 @@ export function ForgotPasswordPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Password recovery</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Forgot your password?</h2>
-        <p className="mt-2 text-sm text-slate-600">Submit your email to trigger the backend forgot-password flow.</p>
+        <p className="mt-2 text-sm text-slate-600">Enter your email and we will send you a reset link.</p>
       </div>
 
       <form

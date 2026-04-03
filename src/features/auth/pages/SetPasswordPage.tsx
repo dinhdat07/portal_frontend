@@ -63,7 +63,7 @@ export function SetPasswordPage() {
       <div className="border-b border-slate-200 bg-white px-6 py-6 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Initial password</p>
         <h2 className="mt-3 font-display text-3xl font-semibold text-slate-950">Set your password</h2>
-        <p className="mt-2 text-sm text-slate-600">Use the backend password-set flow after receiving a setup email from registration or an admin-created account.</p>
+        <p className="mt-2 text-sm text-slate-600">Create your password to finish setting up your account.</p>
       </div>
 
       <form

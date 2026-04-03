@@ -15,13 +15,19 @@ import { PageHeader } from '../../../components/ui/PageHeader';
 import { getAdminUser, updateAdminUser } from '../../../lib/api/admin-users';
 import { getErrorMessage } from '../../../lib/api/errors';
 import { queryKeys } from '../../../lib/api/keys';
-import { toDateInputValue } from '../../../lib/date';
+import { useAuthStore } from '../../../lib/auth/store';
+import { getTodayDateInputValue, toDateInputValue } from '../../../lib/date';
+
+const today = getTodayDateInputValue();
 
 const schema = z.object({
   username: z.string().min(3, 'Minimum 3 characters').max(50, 'Maximum 50 characters'),
   firstName: z.string().min(1, 'First name is required').max(100, 'Maximum 100 characters'),
   lastName: z.string().min(1, 'Last name is required').max(100, 'Maximum 100 characters'),
-  dob: z.string().min(1, 'Date of birth is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .refine((value) => value <= today, 'Date of birth cannot be in the future'),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -29,6 +35,7 @@ type FormValues = z.infer<typeof schema>;
 export function AdminUserEditPage() {
   const { userId = '' } = useParams();
   const navigate = useNavigate();
+  const currentUserId = useAuthStore((state) => state.session?.user.id);
 
   const query = useQuery({
     queryKey: queryKeys.adminUser(userId),
@@ -78,12 +85,23 @@ export function AdminUserEditPage() {
     return <Alert tone="danger" description={getErrorMessage(query.error, 'Unable to load user')} />;
   }
 
+  if (query.data?.role === 'admin' && query.data.id !== currentUserId) {
+    return (
+      <div className="space-y-4">
+        <Alert tone="warning" description="Other admin accounts cannot be edited from this screen." />
+        <Link to={`/admin/users/${userId}`}>
+          <Button variant="secondary">Back to user</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Admin"
         title="Edit user"
-        description="Update the selected user profile using the repaired `PUT /admin/users/:userId` contract."
+        description="Update this user's profile details."
         actions={
           <Link to={`/admin/users/${userId}`}>
             <Button variant="secondary">Cancel</Button>
@@ -111,7 +129,7 @@ export function AdminUserEditPage() {
               <Input {...form.register('username')} />
             </Field>
             <Field label="Date of birth" error={form.formState.errors.dob?.message}>
-              <Input type="date" {...form.register('dob')} />
+              <Input type="date" max={today} {...form.register('dob')} />
             </Field>
           </div>
 

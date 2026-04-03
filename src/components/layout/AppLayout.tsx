@@ -28,9 +28,9 @@ export function AppLayout() {
           <div className="space-y-3">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">Portal</p>
-              <h1 className="font-display text-2xl font-semibold text-slate-950">Frontend Console</h1>
+              <h1 className="font-display text-2xl font-semibold text-slate-950">User Console</h1>
             </div>
-            <p className="text-sm text-slate-600">Backend-safe React client for account and admin user management.</p>
+            <p className="text-sm text-slate-600">Manage your account settings and team members from one place.</p>
           </div>
 
           <nav className="space-y-2">
@@ -71,7 +71,7 @@ export function AppLayout() {
               <h2 className="font-display text-2xl font-semibold text-slate-950">Portal Workspace</h2>
             </div>
             <div className="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
-              Safe-mode UI: unsupported backend routes stay out of navigation.
+              Tips: use the side menu to quickly switch between profile, security, and admin tools.
             </div>
           </div>
           <Outlet />

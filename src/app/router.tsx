@@ -13,6 +13,7 @@ import { AdminUsersPage } from '../features/admin-users/pages/AdminUsersPage';
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
+import { RegisterSuccessPage } from '../features/auth/pages/RegisterSuccessPage';
 import { ResendVerificationPage } from '../features/auth/pages/ResendVerificationPage';
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage';
 import { SetPasswordPage } from '../features/auth/pages/SetPasswordPage';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
+      { path: '/register/verification-sent', element: <RegisterSuccessPage /> },
       { path: '/verify-email', element: <VerifyEmailPage /> },
       { path: '/resend-verification', element: <ResendVerificationPage /> },
       { path: '/forgot-password', element: <ForgotPasswordPage /> },
@@ -63,7 +65,7 @@ const router = createBrowserRouter([
         ) : (
           <FeatureUnavailablePage
             title="Profile editing is disabled"
-            description="The backend currently omits date-of-birth from the profile response and can reject partial updates. This screen stays hidden until that contract is fixed."
+            description="Profile editing is temporarily unavailable."
           />
         ),
       },
@@ -84,7 +86,7 @@ const router = createBrowserRouter([
             ) : (
               <FeatureUnavailablePage
                 title="User editing is disabled"
-                description="This screen stays hidden until the backend supports it safely."
+                description="User editing is temporarily unavailable."
               />
             ),
           },
@@ -95,7 +97,7 @@ const router = createBrowserRouter([
             ) : (
               <FeatureUnavailablePage
                 title="User creation is disabled"
-                description="The current backend implementation creates admin-managed users unreliably, so this screen remains disabled until the backend contract is corrected."
+                description="User creation is temporarily unavailable."
               />
             ),
           },
