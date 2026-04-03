@@ -19,8 +19,6 @@ interface RegisterPayload {
 }
 
 interface TransportLoginResponse {
-  access_token: string;
-  token_type: string;
   expires_in: number;
   user: TransportUser;
 }
@@ -55,10 +53,15 @@ export async function login(payload: LoginPayload): Promise<AuthSession> {
   });
 
   return {
-    accessToken: response.access_token,
     expiresAt: addSeconds(new Date(), response.expires_in).toISOString(),
     user: mapUser(response.user),
   };
+}
+
+export function logout() {
+  return request<TransportMessageResponse>('/auth/logout', {
+    method: 'POST',
+  });
 }
 
 export function register(payload: RegisterPayload) {

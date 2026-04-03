@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { clearStoredSession, dispatchUnauthorizedEvent, readStoredSession } from '../auth/session';
+import { clearStoredSession, dispatchUnauthorizedEvent } from '../auth/session';
 import { ApiError, type ApiErrorPayload } from './types';
 
 type RequestOptions = RequestInit & {
@@ -8,19 +8,15 @@ type RequestOptions = RequestInit & {
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers = new Headers(options.headers);
-  const session = readStoredSession();
 
   if (options.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
 
-  if (options.auth !== false && session?.accessToken) {
-    headers.set('Authorization', `Bearer ${session.accessToken}`);
-  }
-
   const response = await fetch(`${config.apiBaseUrl}${path}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   if (response.status === 401) {

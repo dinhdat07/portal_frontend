@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { logout } from '../../lib/api/auth';
 import { useAuthStore } from '../../lib/auth/store';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
@@ -53,7 +54,12 @@ export function AppLayout() {
               <Button
                 variant="secondary"
                 className="border-white/20 bg-white/10 text-white hover:bg-white/15"
-                onClick={() => {
+                onClick={async () => {
+                  try {
+                    await logout();
+                  } catch {
+                    // Ignore API errors; local sign-out still proceeds.
+                  }
                   clearSession();
                   navigate('/login');
                 }}

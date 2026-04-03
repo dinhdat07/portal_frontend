@@ -19,7 +19,6 @@ export interface UserSummary {
 }
 
 export interface AuthSession {
-  accessToken: string;
   expiresAt: string;
   user: UserSummary;
 }

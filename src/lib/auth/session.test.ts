@@ -9,7 +9,6 @@ describe('session storage', () => {
 
   it('reads a valid session', () => {
     writeStoredSession({
-      accessToken: 'abc',
       expiresAt: '2099-01-01T00:00:00.000Z',
       user: {
         id: '1',
@@ -24,12 +23,11 @@ describe('session storage', () => {
       },
     });
 
-    expect(readStoredSession()?.accessToken).toBe('abc');
+    expect(readStoredSession()?.user.username).toBe('ada');
   });
 
   it('clears expired sessions', () => {
     writeStoredSession({
-      accessToken: 'abc',
       expiresAt: '2000-01-01T00:00:00.000Z',
       user: {
         id: '1',
